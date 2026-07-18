@@ -9,3 +9,6 @@ export * from './interface/index';
 
 // constants
 export * from './constants/index';
+
+// database
+export * from './database/database.module';
