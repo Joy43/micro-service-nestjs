@@ -2,16 +2,19 @@ import { Module } from '@nestjs/common';
 import { AppConfigModule } from './config/config.module';
 import { DatabaseModule } from '@app/common';
 import { KafkaModule } from '@app/kafka';
-import { AuthServiceController } from './auth-service.controller';
-import { AuthServiceService } from './auth-service.service';
+
+import { UsersModule } from './modules/users/users.module';
+import { AuthModule } from './modules/auth/auth.module';
 
 @Module({
   imports: [
     AppConfigModule,
-    DatabaseModule,
+    DatabaseModule.register('auth'),
     KafkaModule.register('auth-service-group'),
+    UsersModule,
+    AuthModule,
   ],
-  controllers: [AuthServiceController],
-  providers: [AuthServiceService],
+ 
+
 })
 export class AuthServiceModule {}

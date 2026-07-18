@@ -8,7 +8,7 @@ import { EventsServiceService } from './events-service.service';
 @Module({
   imports: [
     AppConfigModule,
-    DatabaseModule,
+    DatabaseModule.register('events'),
     KafkaModule.register('events-service-group'),
   ],
   controllers: [EventsServiceController],

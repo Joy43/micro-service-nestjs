@@ -12,3 +12,11 @@ export * from './constants/index';
 
 // database
 export * from './database/database.module';
+
+// dto
+export * from './dto/index';
+
+// guards
+export * from './guards/index';
+
+
