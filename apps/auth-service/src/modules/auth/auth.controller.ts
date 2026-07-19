@@ -14,7 +14,7 @@ export class AuthController {
   @Post('register')
   @ApiOperation({ summary: 'Register a new user account' })
   @ApiResponse({ status: 201, description: 'User successfully registered.', type: AuthResponseDto })
-  @ApiResponse({ status: 400, description: 'Bad Request. Validation failed or email already exists.' })
+
   async register(@Body() registerDto: RegisterDto): Promise<AuthResponseDto> {
     return this.authService.register(registerDto);
   }

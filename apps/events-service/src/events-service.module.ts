@@ -2,16 +2,16 @@ import { Module } from '@nestjs/common';
 import { AppConfigModule } from './config/config.module';
 import { DatabaseModule } from '@app/common';
 import { KafkaModule } from '@app/kafka';
-import { EventsServiceController } from './events-service.controller';
-import { EventsServiceService } from './events-service.service';
+import { EventsModule } from './modules/events/events.module';
 
 @Module({
   imports: [
     AppConfigModule,
     DatabaseModule.register('events'),
     KafkaModule.register('events-service-group'),
+    EventsModule,
   ],
-  controllers: [EventsServiceController],
-  providers: [EventsServiceService],
+  controllers: [],
+  providers: [],
 })
 export class EventsServiceModule {}

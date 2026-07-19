@@ -11,6 +11,7 @@ EVENT_UPDATED:'event-updated',
 EVENT_CREATED:'event-created',
 EVENT_DELETED:'event-deleted',
 EVENT_CANCELLED:'event-cancelled',
+EVENT_PUBLISHED:'event-published',
 // ticket topics
 TICKET_CREATED:'ticket-created',
 TICKET_UPDATED:'ticket-updated',

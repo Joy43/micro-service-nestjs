@@ -5,4 +5,5 @@ export const envValidationSchema = Joi.object({
   EVENTS_SERVICE_PORT: Joi.number().default(6003),
   DATABASE_URL: Joi.string().required(),
   KAFKA_BROKER: Joi.string().default('localhost:29092'),
+  JWT_SECRET: Joi.string().required(),
 });

@@ -1,17 +1,17 @@
 import { Module } from '@nestjs/common';
 import { AppConfigModule } from './config/config.module';
 import { KafkaModule } from '@app/kafka';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
 import { GatewayAuthModule } from './modules/auth/auth.module';
+import { GatewayEventsModule } from './modules/events/events.module';
 
 @Module({
   imports: [
     AppConfigModule,
     KafkaModule.register('api-gateway-group'),
     GatewayAuthModule,
+    GatewayEventsModule,
   ],
-  controllers: [AppController],
-  providers: [AppService],
+
+ 
 })
 export class AppModule {}
