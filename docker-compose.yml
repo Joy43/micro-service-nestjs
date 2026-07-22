@@ -135,7 +135,7 @@ services:
     environment:
       - NODE_ENV=production
       - PORT=3001
-      - DATABASE_URL=postgres://eventflowapp:eventflow_password@postgres:5432/eventflowapp
+      - DATABASE_URL=${DATABASE_URL}
       - KAFKA_BROKER=kafka:29092
       - JWT_SECRET=your_jwt_secret_key
     depends_on:
@@ -157,7 +157,7 @@ services:
     environment:
       - NODE_ENV=production
       - PORT=3003
-      - DATABASE_URL=postgres://eventflowapp:eventflow_password@postgres:5432/eventflowapp
+      - DATABASE_URL=${DATABASE_URL}
       - KAFKA_BROKER=kafka:29092
     depends_on:
       postgres:
@@ -176,7 +176,7 @@ services:
     environment:
       - NODE_ENV=production
       - PORT=3004
-      - DATABASE_URL=postgres://eventflowapp:eventflow_password@postgres:5432/eventflowapp
+      - DATABASE_URL=${DATABASE_URL}
       - KAFKA_BROKER=kafka:29092
     depends_on:
       postgres:
@@ -195,7 +195,7 @@ services:
     environment:
       - NODE_ENV=production
       - PORT=3006
-      - DATABASE_URL=postgres://eventflowapp:eventflow_password@postgres:5432/eventflowapp
+      - DATABASE_URL=${DATABASE_URL}
       - KAFKA_BROKER=kafka:29092
       - SMTP_HOST=mailhog
       - SMTP_PORT=1025

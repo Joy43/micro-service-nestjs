@@ -140,3 +140,4 @@ Earlier, `yarn run dev` failed because:
   ```bash
   pnpm nest g lib new-library-name
   ```
+  docker compose up -d zookeeper kafka kafka-ui postgres redis mailhog

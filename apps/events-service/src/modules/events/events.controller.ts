@@ -46,9 +46,6 @@ export class EventsController {
   @ApiBearerAuth()
   @ApiOperation({ summary: 'Update an event (Host/Admin only)' })
   @ApiResponse({ status: 200, description: 'Event updated successfully', type: EventResponseDto })
-  @ApiResponse({ status: 401, description: 'Unauthorized' })
-  @ApiResponse({ status: 403, description: 'Forbidden: Insufficient permissions' })
-  @ApiResponse({ status: 404, description: 'Event not found' })
   updateEvent(@Param('id') id: string, @Body() updateEventDto: UpdateEventDto, @Request() req: any) {
     const userId = req.user?.sub || req.user?.userId || req.user?.id;
     return this.eventsService.updateEvent(id, updateEventDto, userId);
@@ -61,9 +58,6 @@ export class EventsController {
   @ApiBearerAuth()
   @ApiOperation({ summary: 'Delete an event (Host/Admin only)' })
   @ApiResponse({ status: 200, description: 'Event deleted successfully' })
-  @ApiResponse({ status: 401, description: 'Unauthorized' })
-  @ApiResponse({ status: 403, description: 'Forbidden: Insufficient permissions' })
-  @ApiResponse({ status: 404, description: 'Event not found' })
   deleteEvent(@Param('id') id: string, @Request() req: any) {
     const userId = req.user?.sub || req.user?.userId || req.user?.id;
     return this.eventsService.deleteEvent(id, userId);
@@ -88,8 +82,6 @@ export class EventsController {
   @ApiBearerAuth()
   @ApiOperation({ summary: 'Get events created by the logged-in user' })
   @ApiResponse({ status: 200, description: 'List of events', type: GetEventsResponseDto })
-  @ApiResponse({ status: 401, description: 'Unauthorized' })
-  @ApiResponse({ status: 403, description: 'Forbidden: Insufficient permissions' })
   getMyEvents(@Request() req: any) {
     const userId = req.user?.sub || req.user?.userId || req.user?.id;
     return this.eventsService.findMyEvents(userId);
