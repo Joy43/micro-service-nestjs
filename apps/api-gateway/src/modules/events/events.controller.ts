@@ -59,8 +59,7 @@ export class GatewayEventsController {
   @ApiBearerAuth()
   @ApiOperation({ summary: 'Get events created by the logged-in user' })
   @ApiResponse({ status: 200, description: 'List of events', type: GetEventsResponseDto })
-  @ApiResponse({ status: 401, description: 'Unauthorized' })
-  @ApiResponse({ status: 403, description: 'Forbidden: Insufficient permissions' })
+
   getMyEvents(@Request() req: any) {
     const userId = req.user?.sub || req.user?.userId || req.user?.id;
     return this.gatewayEventsService.findMyEvents(userId);
@@ -70,7 +69,6 @@ export class GatewayEventsController {
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Get event by ID (Public)' })
   @ApiResponse({ status: 200, description: 'Event details', type: EventResponseDto })
-  @ApiResponse({ status: 404, description: 'Event not found' })
   getEvent(@Param('id') id: string) {
     return this.gatewayEventsService.findOne(id);
   }

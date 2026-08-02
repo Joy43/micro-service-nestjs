@@ -19,7 +19,10 @@ export class UsersService {
       throw new ConflictException('User with this email already exists');
     }
 
-    const user = this.usersRepository.create(registerDto);
+    const user = this.usersRepository.create({
+      ...registerDto,
+      roles: registerDto.roles && registerDto.roles.length > 0 ? registerDto.roles : ['user'],
+    });
     return this.usersRepository.save(user);
   }
 

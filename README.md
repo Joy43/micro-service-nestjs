@@ -2,97 +2,152 @@
   <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
 </p>
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+# 🚀 EventFlow Manage - Microservices Platform
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+**EventFlow Manage** is an enterprise-grade NestJS microservices platform for event management, ticket booking, payment processing, and notification handling, powered by **PostgreSQL**, **Kafka**, **Redis**, and **Docker**.
 
-## Description
+---
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+## 🏗️ System Architecture & Services
 
-## Project setup
+The platform consists of **6 NestJS Microservices** and **6 Infrastructure Services**:
 
+### 🧩 Microservices
+| Microservice | Container Name | Default Port | Description |
+| :--- | :--- | :--- | :--- |
+| **API Gateway** | `eventflowapp-api-gateway` | `3000` | Main entry point, HTTP routing & proxying |
+| **Auth Service** | `eventflowapp-auth-service` | `3001` | User registration, login, JWT validation |
+| **Events Service** | `eventflowapp-events-service` | `3002` | Event creation, management & catalog |
+| **Ticket Service** | `eventflowapp-ticket-service` | `3003` | Ticket inventory, reservation & booking |
+| **Payment Service** | `eventflowapp-payment-service` | `3004` | Transaction processing & payment gateways |
+| **Notification Service**| `eventflowapp-notification-service` | `3005` | Email & event notifications (via Mailhog) |
+
+### 🛠️ Infrastructure Services
+| Service | Image | Ports | Description |
+| :--- | :--- | :--- | :--- |
+| **PostgreSQL** | `postgres:16-alpine` | `5432` | Primary database |
+| **Kafka Broker** | `confluentinc/cp-kafka:7.5.0` | `9092`, `9093`, `29092` | Event messaging queue |
+| **Zookeeper** | `confluentinc/cp-zookeeper:7.5.0` | `2181` | Kafka cluster management |
+| **Kafka UI** | `provectuslabs/kafka-ui:latest` | `8080` | Web dashboard for Kafka topics & messages |
+| **Redis** | `redis:7-alpine` | `6379` | In-memory cache & session storage |
+| **Mailhog** | `mailhog/mailhog:latest` | `1025` (SMTP), `8025` (Web UI) | Local SMTP server & email testing web UI |
+
+---
+
+## 📦 Docker Prerequisites & Installation
+
+### 1. Prerequisites
+Ensure Docker is installed on your system:
+- **macOS / Windows**: Install [Docker Desktop](https://www.docker.com/products/docker-desktop/)
+- **Linux**: Install [Docker Engine](https://docs.docker.com/engine/install/) & `docker-compose-plugin`
+
+### 2. Verify Installation
 ```bash
-$ pnpm install
+docker --version
+docker compose version
 ```
 
-## Compile and run the project
+---
 
+## ⚡ Quick Start with Docker
+
+### Step 1: Clone & Configure Environment
+Ensure your `.env` file exists in the root directory:
 ```bash
-# development
-$ pnpm run start
-
-# watch mode
-$ pnpm run start:dev
-
-# production mode
-$ pnpm run start:prod
+cp .env.example .env   # Or ensure your existing .env has valid DB/Kafka configs
 ```
 
-## Run tests
-
+### Step 2: Start All Services via Docker Compose
+Build and run all microservices and infrastructure containers in detached mode:
 ```bash
-# unit tests
-$ pnpm run test
-
-# e2e tests
-$ pnpm run test:e2e
-
-# test coverage
-$ pnpm run test:cov
+docker compose up -d --build
 ```
 
-## Deployment
-
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
-
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
-
+### Step 3: Check Running Containers
+Verify that all containers are healthy and running:
 ```bash
-$ pnpm install -g @nestjs/mau
-$ mau deploy
+docker compose ps
 ```
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+### Step 4: Access Application & Web Dashboards
+- **API Gateway**: `http://localhost:3000`
+- **Kafka UI**: `http://localhost:8080`
+- **Mailhog Web UI**: `http://localhost:8025`
 
-## Resources
+---
 
-Check out a few resources that may come in handy when working with NestJS:
+## 💡 Hybrid Development Mode (Infrastructure Only in Docker)
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+If you prefer running microservices locally using `pnpm` while running PostgreSQL, Kafka, and Redis in Docker:
 
-## Support
+1. **Start only the infrastructure containers:**
+   ```bash
+   docker compose up -d postgres kafka zookeeper redis mailhog kafka-ui
+   ```
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+2. **Run microservices locally:**
+   ```bash
+   pnpm install
+   pnpm start:dev api-gateway
+   pnpm start:dev auth-service
+   pnpm start:dev events-service
+   ```
 
-## Stay in touch
+---
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+## 📖 Complete Docker Commands Reference
 
-## License
+### 🚀 Container Lifecycle
+| Command | Description |
+| :--- | :--- |
+| `docker compose up -d` | Start all services in background |
+| `docker compose up -d --build` | Rebuild images and start all services |
+| `docker compose down` | Stop and remove all containers and networks |
+| `docker compose down -v` | Stop containers and **purge all volume data** (Postgres, Kafka, Redis) |
+| `docker compose restart` | Restart all containers |
+| `docker compose restart <service>` | Restart a specific service (e.g. `docker compose restart api-gateway`) |
+| `docker compose stop` | Stop containers without removing them |
+| `docker compose start` | Start previously stopped containers |
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+### 🔍 Logs & Monitoring
+| Command | Description |
+| :--- | :--- |
+| `docker compose logs -f` | Stream live logs for all running services |
+| `docker compose logs -f <service>` | Stream live logs for a specific service (e.g. `docker compose logs -f auth-service`) |
+| `docker compose ps` | List all project containers and their status |
+| `docker stats` | Live CPU, memory, and network stats for active containers |
+
+### 🛠️ Maintenance & Execution
+| Command | Description |
+| :--- | :--- |
+| `docker compose exec <service> sh` | Open a shell inside a container (e.g. `docker compose exec api-gateway sh`) |
+| `docker compose exec postgres psql -U eventflowapp -d eventflowapp` | Connect to PostgreSQL CLI inside container |
+| `docker compose exec redis redis-cli` | Connect to Redis CLI inside container |
+| `docker compose build --no-cache <service>` | Force a clean rebuild of a single microservice image |
+
+### 🧹 Cleanup Commands
+| Command | Description |
+| :--- | :--- |
+| `docker system prune -f` | Remove unused/dangling containers, networks, and images |
+| `docker system prune -a --volumes -f` | Wipe **all** cached images, stopped containers, and unused volumes |
+
+---
+
+## ⚙️ Dockerfile Multi-Stage Architecture
+
+The project uses a multi-stage Docker build (`Dockerfile`) to optimize build size and caching across microservices:
+
+1. **`deps` stage**: Installs node modules with `pnpm install --frozen-lockfile`.
+2. **`builder` stage**: Compiles the specific NestJS app specified via `--build-arg SERVICE=<app-name>`.
+3. **`runner` stage**: Lightweight production image running `node dist/apps/${SERVICE}/main.js`.
+
+### Build a Single Image Manually:
+```bash
+docker build --build-arg SERVICE=auth-service -t eventflow/auth-service:latest .
+```
+
+---
+
+## 📄 License
+This project is proprietary and confidential. All rights reserved.
+

@@ -15,6 +15,7 @@ export class EventsService {
     private readonly kafkaClient: ClientKafka,
   ) {}
 
+  // -------create events------
   async createEvent(createEventDto: CreateEventDto, userId: string) {
     const newEvent = this.eventRepository.create({
       ...createEventDto,

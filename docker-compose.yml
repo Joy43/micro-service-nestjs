@@ -109,7 +109,9 @@ services:
       - PORT=3000
       - AUTH_SERVICE_URL=http://auth-service:3001
       - EVENTS_SERVICE_URL=http://events-service:3002
-      - TICKETS_SERVICE_URL=http://tickets-service:3003
+      - TICKET_SERVICE_URL=http://ticket-service:3003
+      - PAYMENT_SERVICE_URL=http://payment-service:3004
+      - NOTIFICATION_SERVICE_URL=http://notification-service:3005
       - JWT_SECRET=your_jwt_secret_key
       - REDIS_HOST=redis
       - REDIS_PORT=6379
@@ -118,10 +120,13 @@ services:
          condition: service_started
       events-service:
           condition: service_started
-      tickets-service:
+      ticket-service:
+          condition: service_started
+      payment-service:
+          condition: service_started
+      notification-service:
           condition: service_started
     restart: unless-stopped
-
 
   auth-service:
     build:
@@ -144,7 +149,7 @@ services:
       redis:
         condition: service_started
     restart: unless-stopped
-  
+
   events-service:
     build:
       context: .
@@ -152,6 +157,25 @@ services:
       args:
         SERVICE: events-service
     container_name: eventflowapp-events-service
+    ports:
+      - "3002:3002"
+    environment:
+      - NODE_ENV=production
+      - PORT=3002
+      - DATABASE_URL=${DATABASE_URL}
+      - KAFKA_BROKER=kafka:29092
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: unless-stopped
+
+  ticket-service:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        SERVICE: ticket-service
+    container_name: eventflowapp-ticket-service
     ports:
       - "3003:3003"
     environment:
@@ -163,14 +187,14 @@ services:
       postgres:
         condition: service_healthy
     restart: unless-stopped
-  
-  tickets-service:
+
+  payment-service:
     build:
       context: .
       dockerfile: Dockerfile
       args:
-        SERVICE: tickets-service
-    container_name: eventflowapp-tickets-service
+        SERVICE: payment-service
+    container_name: eventflowapp-payment-service
     ports:
       - "3004:3004"
     environment:
@@ -182,19 +206,19 @@ services:
       postgres:
         condition: service_healthy
     restart: unless-stopped
-  
-  notifications-service:
+
+  notification-service:
     build:
       context: .
       dockerfile: Dockerfile
       args:
-        SERVICE: notifications-service
-    container_name: eventflowapp-notifications-service
+        SERVICE: notification-service
+    container_name: eventflowapp-notification-service
     ports:
-      - "3006:3006"
+      - "3005:3005"
     environment:
       - NODE_ENV=production
-      - PORT=3006
+      - PORT=3005
       - DATABASE_URL=${DATABASE_URL}
       - KAFKA_BROKER=kafka:29092
       - SMTP_HOST=mailhog

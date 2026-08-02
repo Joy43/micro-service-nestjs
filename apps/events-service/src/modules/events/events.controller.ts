@@ -16,7 +16,6 @@ export class EventsController {
   @UseGuards(JwtAuthGuard, RolesGuard)
   @ApiBearerAuth()
   @ApiOperation({ summary: 'Create a new event (Host/Admin only)' })
-  @ApiResponse({ status: 201, description: 'Event created successfully', type: CreateEventResponseDto })
   createEvent(@Body() createEventDto: CreateEventDto, @Request() req: any) {
     const userId = req.user?.sub || req.user?.userId || req.user?.id;
     return this.eventsService.createEvent(createEventDto, userId);
@@ -25,7 +24,6 @@ export class EventsController {
   @Get()
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Get list of events (Public)' })
-  @ApiResponse({ status: 200, description: 'List of events', type: GetEventsResponseDto })
   getEvents(@Query() query?: EventSearchDto) {
     return this.eventsService.findAll(query);
   }
@@ -45,7 +43,6 @@ export class EventsController {
   @UseGuards(JwtAuthGuard, RolesGuard)
   @ApiBearerAuth()
   @ApiOperation({ summary: 'Update an event (Host/Admin only)' })
-  @ApiResponse({ status: 200, description: 'Event updated successfully', type: EventResponseDto })
   updateEvent(@Param('id') id: string, @Body() updateEventDto: UpdateEventDto, @Request() req: any) {
     const userId = req.user?.sub || req.user?.userId || req.user?.id;
     return this.eventsService.updateEvent(id, updateEventDto, userId);
@@ -69,7 +66,6 @@ export class EventsController {
   @UseGuards(JwtAuthGuard, RolesGuard)
   @ApiBearerAuth()
   @ApiOperation({ summary: 'Publish an event (Host/Admin only)' })
-  @ApiResponse({ status: 200, description: 'Event published successfully' })
   publishEvent(@Param('id') id: string, @Request() req: any) {
     const userId = req.user?.sub || req.user?.userId || req.user?.id;
     return this.eventsService.publishEvent(id, userId);
@@ -81,7 +77,7 @@ export class EventsController {
   @UseGuards(JwtAuthGuard, RolesGuard)
   @ApiBearerAuth()
   @ApiOperation({ summary: 'Get events created by the logged-in user' })
-  @ApiResponse({ status: 200, description: 'List of events', type: GetEventsResponseDto })
+
   getMyEvents(@Request() req: any) {
     const userId = req.user?.sub || req.user?.userId || req.user?.id;
     return this.eventsService.findMyEvents(userId);

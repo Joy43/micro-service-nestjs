@@ -39,6 +39,6 @@ async function bootstrap() {
 
   await app.startAllMicroservices();
   await app.listen(port);
-  console.log(`Auth Service is running on http://localhost:${port} and connected to Kafka (${kafkaBroker})`);
+  console.log(`Auth Service is running on http://localhost:${port}/api/docs and connected to Kafka (${kafkaBroker})`);
 }
 bootstrap();
