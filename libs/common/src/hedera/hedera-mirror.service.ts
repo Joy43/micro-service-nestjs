@@ -28,7 +28,7 @@ export class HederaMirrorService {
 
   /**
    * Get account details from Hedera Mirror Node
-   * @param accountId Hedera Account ID (e.g. 0.0.67890)
+   * @param accountId 
    */
   async getAccountInfo(accountId: string) {
     try {

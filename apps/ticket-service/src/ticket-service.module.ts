@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
-import { TicketServiceController } from './ticket-service.controller';
-import { TicketServiceService } from './ticket-service.service';
+import { TicketServiceController } from './modules/ticket/ticket-service.controller';
+import { TicketServiceService } from './modules/ticket/ticket-service.service';
 
 @Module({
   imports: [],

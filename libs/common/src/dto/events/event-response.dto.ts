@@ -29,6 +29,9 @@ export class EventResponseDto implements IEvent {
   @ApiProperty({ example: 500 })
   availableTickets!: number;
 
+  @ApiProperty({ example: 500 })
+  capacity!: number;
+
   @ApiProperty({ enum: EventStatus, example: EventStatus.PUBLISHED })
   status!: EventStatus;
 

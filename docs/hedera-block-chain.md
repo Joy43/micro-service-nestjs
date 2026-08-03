@@ -124,7 +124,7 @@ export class HederaService {
 
 ```typescript
 import { Controller, Post, Body } from '@nestjs/common';
-import { HederaService } from '@app/common'; // libs/common থেকে ইম্পোর্ট
+import { HederaService } from '@app/common'; 
 
 @Controller('events')
 export class EventsController {
@@ -160,30 +160,26 @@ export class EventsController {
 
 ```
 
-## ৫. Exporting from Common Module
+## -------- Exporting from Common Module ------------
 
 `libs/common` ফোল্ডার থেকে ফাইলগুলো এক্সপোর্ট করতে ভুলবেন না।
 
 **ফাইল:** `libs/common/src/hedera/hedera.module.ts`
 
-```typescript
 import { Module } from '@nestjs/common';
 import { HederaService } from './hedera.service';
 import { HederaMirrorService } from './hedera-mirror.service';
 
 @Module({
   providers: [HederaService, HederaMirrorService],
-  exports: [HederaService, HederaMirrorService], // Exporting for other microservices
+  exports: [HederaService, HederaMirrorService],
 })
 export class HederaModule {}
 
-```
 
-**ফাইল:** `libs/common/src/index.ts`
+<!-- **ফাইল:**  -->
 
-```typescript
 export * from './hedera/hedera.module';
 export * from './hedera/hedera.service';
 export * from './hedera/hedera-mirror.service';
 
-```

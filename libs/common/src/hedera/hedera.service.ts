@@ -29,7 +29,17 @@ export class HederaService {
 
     try {
       const accountId = AccountId.fromString(rawAccountId);
-      const privateKey = PrivateKey.fromString(rawPrivateKey);
+      let privateKey: PrivateKey;
+      
+      try {
+        privateKey = PrivateKey.fromStringECDSA(rawPrivateKey);
+      } catch {
+        try {
+          privateKey = PrivateKey.fromStringED25519(rawPrivateKey);
+        } catch {
+          privateKey = PrivateKey.fromString(rawPrivateKey);
+        }
+      }
 
       this.client =
         process.env.HEDERA_NETWORK === 'mainnet'

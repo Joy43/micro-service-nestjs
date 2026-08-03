@@ -32,6 +32,8 @@ export class EventEntity implements IEvent {
   @Column({ type: 'int', name: 'available_tickets', default: 100 })
   availableTickets!: number;
 
+  @Column({ type: 'int', default: 100 })
+  capacity!: number;
   @Column({
     type: 'enum',
     enum: EventStatus,

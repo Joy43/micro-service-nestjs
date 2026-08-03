@@ -145,7 +145,10 @@ The project uses a multi-stage Docker build (`Dockerfile`) to optimize build siz
 ```bash
 docker build --build-arg SERVICE=auth-service -t eventflow/auth-service:latest .
 ```
+``` bash
+docker compose restart zookeeper kafka
 
+```
 ---
 
 ## 📄 License

@@ -1,18 +1,28 @@
-import { ForbiddenException, Inject, Injectable, NotFoundException } from '@nestjs/common';
+import { ForbiddenException, Inject, Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { ClientKafka } from '@nestjs/microservices';
 import { KAFKA_SERVICE, KAFKA_TOPICS } from '@app/kafka';
+import {
+  CreateEventDto,
+  EventSearchDto,
+  HederaMirrorService,
+  HederaService,
+  UpdateEventDto,
+} from '@app/common';
 import { EventEntity, EventStatus } from './entities/events.entities';
-import { CreateEventDto, EventSearchDto, UpdateEventDto } from './dto/index';
 
 @Injectable()
 export class EventsService {
+  private readonly logger = new Logger(EventsService.name);
+
   constructor(
     @InjectRepository(EventEntity)
     private readonly eventRepository: Repository<EventEntity>,
     @Inject(KAFKA_SERVICE)
     private readonly kafkaClient: ClientKafka,
+    private readonly hederaService: HederaService,
+    private readonly hederaMirrorService: HederaMirrorService,
   ) {}
 
   // -------create events------
@@ -20,7 +30,9 @@ export class EventsService {
     const newEvent = this.eventRepository.create({
       ...createEventDto,
       date: new Date(createEventDto.date),
+      totalTickets: createEventDto.totalTickets,
       availableTickets: createEventDto.totalTickets,
+      capacity: createEventDto.capacity ?? createEventDto.totalTickets,
       status: EventStatus.DRAFT,
       createdBy: userId,
     });
@@ -164,7 +176,7 @@ export class EventsService {
 
     event.status = EventStatus.PUBLISHED;
     const publishedEvent = await this.eventRepository.save(event);
-
+// -----------kafka message --------------
     this.kafkaClient.emit(KAFKA_TOPICS.EVENT_PUBLISHED, {
       eventId: publishedEvent.id,
       title: publishedEvent.title,
@@ -174,6 +186,17 @@ export class EventsService {
       publishedBy: userId,
       timestamp: new Date().toISOString(),
     });
+    // --------- backgoround hedera ------------
+     this.hederaService.submitTextMessage(
+    process.env.HEDERA_TOPIC_ID || '0.0.9832701',
+    JSON.stringify({
+      action: 'EVENT_PUBLISHED',
+      eventId: publishedEvent.id,
+      title: publishedEvent.title,
+      timestamp: new Date().toISOString(),
+    })
+  ).catch((err: any) => this.logger.error('Hedera log failed', err));
+
 
     return {
       event: publishedEvent,

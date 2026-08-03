@@ -1,14 +1,29 @@
 import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, Post, Put, Query, UseGuards, Request } from '@nestjs/common';
 import { MessagePattern, Payload } from '@nestjs/microservices';
 import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { JwtAuthGuard, Roles, RolesGuard, UserRole } from '@app/common';
+import {
+  CreateEventDto,
+  CreateEventResponseDto,
+  EventResponseDto,
+  EventSearchDto,
+  GetEventsResponseDto,
+  HederaMirrorService,
+  HederaService,
+  JwtAuthGuard,
+  Roles,
+  RolesGuard,
+  UpdateEventDto,
+  UserRole,
+} from '@app/common';
 import { EventsService } from './events.service';
-import { CreateEventDto, CreateEventResponseDto, EventResponseDto, EventSearchDto, UpdateEventDto, GetEventsResponseDto } from './dto/index';
 
 @ApiTags('Events')
 @Controller('events')
 export class EventsController {
-  constructor(private readonly eventsService: EventsService) {}
+  constructor(private readonly eventsService: EventsService,
+    private readonly hederaService: HederaService,
+    private readonly hederaMirrorService: HederaMirrorService,
+  ) {}
 
   @Post()
   @HttpCode(HttpStatus.CREATED)
@@ -26,6 +41,30 @@ export class EventsController {
   @ApiOperation({ summary: 'Get list of events (Public)' })
   getEvents(@Query() query?: EventSearchDto) {
     return this.eventsService.findAll(query);
+  }
+
+  @Get('hedera/test-topic')
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({ summary: 'Test Hedera: Create a topic and submit a test message' })
+  async testHedera() {
+    const topicId = await this.hederaService.createTopic();
+    const submitResult = await this.hederaService.submitTextMessage(
+      topicId,
+      JSON.stringify({ test: 'Hedera integration test', timestamp: new Date().toISOString() }),
+    );
+    return {
+      topicId,
+      submitResult,
+      mirrorNodeUrl: `https://testnet.mirrornode.hedera.com/api/v1/topics/${topicId}/messages`,
+      hashscanUrl: `https://hashscan.io/testnet/topic/${topicId}`,
+    };
+  }
+
+  @Get('hedera/messages/:topicId')
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({ summary: 'Test Hedera Mirror Node: Fetch topic messages' })
+  async getTopicMessages(@Param('topicId') topicId: string) {
+    return this.hederaMirrorService.getTopicMessages(topicId);
   }
 
   @Get(':id')
