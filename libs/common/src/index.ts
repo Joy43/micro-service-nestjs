@@ -19,4 +19,7 @@ export * from './dto/index';
 // guards
 export * from './guards/index';
 
-
+// hedera
+export * from './hedera/hedera.module';
+export * from './hedera/hedera.service';
+export * from './hedera/hedera-mirror.service';
